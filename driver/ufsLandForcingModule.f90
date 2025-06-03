@@ -224,7 +224,6 @@ contains
   
     status = nf90_get_var(ncid, varid, read_time, start = (/itime/))
      if(status /= nf90_noerr) call handle_err(status)
-     
     if (read_time == namelist%initial_time + namelist%timestep_seconds) then
        this%forcing_counter = itime
        next_time = read_time

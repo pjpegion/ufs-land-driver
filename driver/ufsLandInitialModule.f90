@@ -158,7 +158,6 @@ contains
   status = nf90_get_att(ncid, NF90_GLOBAL, "land_cover_source", this%land_cover_source)
   
   namelist%initial_time = this%time
-  
   end subroutine ReadInitial
 
   subroutine TransferInitialNoah(this, namelist, noah)
