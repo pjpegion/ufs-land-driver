@@ -1,4 +1,4 @@
-# Makefile 
+#Makefile 
 #
 .SUFFIXES:
 .SUFFIXES: .o .f90

@@ -1,0 +1,143 @@
+!
+! Brief documentation for namelist available options, default values are listed
+!
+
+&run_setup
+
+  static_file         = "/scratch2/NCEPDEV/land/data/ufs-land-driver/vector_inputs/C192.mx025/ufs-land_C192.mx025_hr3_static_fields.nc"    ! path to static file [char*128]
+  init_file           = "/scratch2/BMC/gsienkf/Philip.Pegion/ufs-land-driver.HR4/data/init/ufs-land_C192_hr3_era5_init_1970-01-01_23-00-00.nc" ! path to initial condition file, used for cold starts [char*128]
+  forcing_dir         = "/scratch2/BMC/gsienkf/Philip.Pegion/ufs-land-driver.new/forcing/C192.mx025/"
+  
+  output_frequency_s  = -2      ! instantaneous output file frequency in seconds, -1 for daily, -2 for monthly [integer]
+  separate_output     = .true. ! write a separate file for each output time [logical]
+  output_hour         = "00"    ! for daily/monthly instantaneous output, hour of day to output [char*2]
+  output_day          = "01"    ! for monthly instantaneous output, day of month to output [char*2]
+  output_dir          = "output"      ! directory path for instantaneous output [char*128]
+  output_initial      = .true. ! write instantaneous output file before first model execution [logical]
+
+  restart_frequency_s = -2      ! restart file frequency in seconds, -1 for daily, -2 for monthly [integer]
+  restart_simulation  = .true. ! simulation is a restart from restart_date [logical]
+  restart_date        = "2007-05-01 00:00:00"      ! date of restart in format "YYYY-MM-DD hh:mm:ss" [char*19]
+  restart_dir         = "restart"      ! directory path for read and write of restart files [char*128]
+  restart_hour        = "00"    ! for daily/monthly restart frequency, hour of day to write restart [char*2]
+  restart_day         = "01"    ! for monthly restart frequency, day of month to write restart [char*2]
+
+  timestep_seconds = 3600       ! model integration timestep in seconds [integer]
+
+! simulation_start is required for cold start runs
+! either set simulation_end or run_* or run_timesteps, priority
+!   1. simulation_end 
+!   2. run_[days/hours/minutes/seconds] 
+!   3. run_timesteps
+
+  simulation_start = "2007-05-01 00:00:00"         ! start date for cold start simulation in format "YYYY-MM-DD hh:mm:ss" [char*19]
+  simulation_end   = "2023-12-01 00:00:00"         !   end date for cold start and restart simulations in format "YYYY-MM-DD hh:mm:ss" [char*19]
+
+  run_days         = -999       ! number of days to run [integer]
+  run_hours        = -999       ! number of hours to run [integer]
+  run_minutes      = -999       ! number of minutes to run [integer]
+  run_seconds      = -999       ! number of seconds to run [integer]
+  
+  run_timesteps    = -999       ! number of timesteps to run [integer]
+  
+  location_start   = 1          ! starting spatial location within vector [integer]
+  location_end     = 70664
+  
+  reference_date = "1970-01-01 00:00:00" ! reference date for time calculation in format "YYYY-MM-DD hh:mm:ss" [char*19]
+
+/
+
+&land_model_option
+ land_model        = 2    ! land model: 1=noah, 2=noahmp [integer]
+/
+
+&structure
+ num_soil_levels   = 4       ! number of soil levels [integer]
+ forcing_height    = 10.     ! forcing height in meters [real]
+/
+
+&soil_setup
+ soil_level_thickness   = 0.10,0.30,0.60,1.00
+ soil_level_nodes       = 0.05,0.25,0.70,1.50 
+/
+
+&noahmp_options
+ dynamic_vegetation_option         = 4 ! dynamic vegetation option (see code header for more details)
+ canopy_stomatal_resistance_option = 2 ! canopy stomatal resistance option (see code header for more details)
+ soil_wetness_option               = 1 ! soil wetness option (see code header for more details)
+ runoff_option                     = 1 ! subsurface runoff option (see code header for more details)
+ surface_exchange_option           = 3 ! above-canopy exchange coefficient option (see code header for more details)
+ supercooled_soilwater_option      = 1 ! supercooled soil water capacity option (see code header for more details)
+ frozen_soil_adjust_option         = 1 ! frozen soil infiltration option (see code header for more details)
+ radiative_transfer_option         = 3 ! canopy radiative transfer option (see code header for more details)
+ snow_albedo_option                = 1 ! snow aging/albedo option (see code header for more details)
+ precip_partition_option           = 1 ! rain/snow partitioning option (see code header for more details)
+ soil_temp_lower_bdy_option        = 2 ! soil heat diffusion bottom boundary condition option (see code header for more details)
+ soil_temp_time_scheme_option      = 3 ! soil heat diffusion top boundary condition option (see code header for more details)
+ thermal_roughness_scheme_option   = 2 ! thermal roughness length option (see code header for more details)
+ surface_evap_resistance_option    = 1 ! surface evaporation resistance option (see code header for more details)
+ glacier_option                    = 1 ! glacier grid option (see code header for more details)
+ tq_diagnostic_option              = 3 ! 2-m temperature/specific humidity option (see code header for more details)
+/
+
+&forcing
+ forcing_timestep_seconds       = 3600 
+ forcing_regrid                 = "none" 
+ forcing_regrid_weights_filename= ""    
+ forcing_type                   = "dd_1h" 
+ forcing_filename               = "ERA5-C192.mx025_hr3_datm_"
+ forcing_interp_solar           = "linear"   
+ forcing_time_solar             = "instantaneous" 
+ forcing_name_precipitation     = "precipitation"
+ forcing_name_temperature       = "temperature"  
+ forcing_name_specific_humidity = "specific_humidity"    ! variable name for specific humidity in forcing file [char*128]
+ forcing_name_wind_speed        = "wind_speed"    
+ forcing_name_pressure          = "surface_pressure" 
+ forcing_name_sw_radiation      = "solar_radiation"   
+ forcing_name_lw_radiation      = "longwave_radiation" 
+/
+
+&io
+ output_names  =  "canopy_water",
+                  "temperature_radiative",
+                  "emissivity_total",
+                  "temperature_leaf",
+                  "temperature_ground",
+                  "canopy_ice",
+                  "canopy_liquid",
+                  "vapor_pres_canopy_air",
+                  "temperature_canopy_air",
+                  "cm_noahmp",
+                  "ch_noahmp",
+                  "canopy_wet_fraction",
+                  "snow_water_equiv_old",
+                  "snow_albedo_old",
+                  "lake_water",
+                  "depth_water_table",
+                  "aquifer_water",
+                  "saturated_water",
+                  "leaf_carbon",
+                  "root_carbon",
+                  "stem_carbon",
+                  "wood_carbon",
+                  "soil_carbon_stable",
+                  "soil_carbon_fast",
+                  "stem_area_index",
+                  "leaf_area_index",
+                  "snow_age",
+                  "soil_moisture_wtd",
+                  "deep_recharge",
+                  "recharge",
+                  "temperature_soil",
+                  "soil_moisture_vol",
+                  "soil_liquid_vol",
+                  "albedo_direct",
+                  "albedo_diffuse",
+                  "eq_soil_water_vol"
+
+ restart_names      = "" ! variable names separated by commas to add to default restart file list [char*128]
+ diurnal_names      = "" ! variable names separated by commas to put in monthly mean diurnal cycle file [char*128]
+ daily_mean_names   = "" ! variable names separated by commas to put in daily mean file [char*128]
+ solar_noon_names   = "" ! variable names separated by commas to put in daily solar noon file [char*128]
+                         ! example format for all: ""temperature_2m","dewpoint_2m","sensible_heat_total"
+/
